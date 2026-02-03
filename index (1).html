@@ -4,16 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Barcelona Trip 2026</title>
-
-<!-- ─── PWA ─── -->
-<meta name="theme-color" content="#7c3aed"/>
-<meta name="description" content="Your complete 7-day guide to the Barcelona school trip."/>
-<link rel="manifest" href="manifest.json"/>
-<link rel="apple-touch-icon" href="icons/icon-192.png"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="BCN Trip"/>
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
   /* ─── VARIABLES ─── */
@@ -51,62 +41,6 @@
   .blob-2{ width:400px;height:400px;background:#6d28d9;bottom:-100px;right:-80px; }
   .blob-3{ width:300px;height:300px;background:#a855f7;top:50%;left:50%;transform:translate(-50%,-50%); opacity:.12;}
 
-  /* ─── INSTALL BANNER ─── */
-  #install-banner {
-    display:none; position:fixed; top:0; left:0; right:0; z-index:200;
-    background:linear-gradient(135deg,#1e1730,#16111f);
-    border-bottom:1px solid var(--border);
-    padding:14px 18px;
-    align-items:center; justify-content:space-between; gap:12px;
-  }
-  #install-banner.show { display:flex; }
-  #install-banner .banner-left { display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
-  #install-banner .banner-icon { font-size:1.5rem; flex-shrink:0; }
-  #install-banner .banner-text { font-size:.8rem; color:var(--text-dim); line-height:1.4; }
-  #install-banner .banner-text strong { color:var(--text); }
-  #install-banner .btn-install {
-    background:linear-gradient(135deg,var(--accent2),var(--accent3));
-    color:#fff; border:none; border-radius:10px;
-    padding:9px 18px; font-size:.82rem; font-weight:600;
-    cursor:pointer; flex-shrink:0; white-space:nowrap;
-    font-family:'DM Sans',sans-serif; transition:opacity .2s;
-  }
-  #install-banner .btn-install:hover { opacity:.82; }
-  #install-banner .btn-dismiss {
-    background:none; border:none; color:var(--text-dim);
-    font-size:1.1rem; cursor:pointer; flex-shrink:0; padding:2px 6px;
-  }
-
-  /* ─── iOS OVERLAY ─── */
-  #ios-overlay {
-    display:none; position:fixed; inset:0; z-index:300;
-    background:rgba(14,10,20,.92); backdrop-filter:blur(6px);
-    align-items:center; justify-content:center; padding:28px;
-  }
-  #ios-overlay.show { display:flex; }
-  .ios-card {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:22px; padding:32px 26px; max-width:380px; width:100%; text-align:center;
-  }
-  .ios-card h3 { font-family:'Playfair Display',serif; font-size:1.3rem; margin-bottom:6px; }
-  .ios-card .ios-sub { color:var(--text-dim); font-size:.82rem; margin-bottom:22px; }
-  .ios-steps { text-align:left; display:flex; flex-direction:column; gap:18px; margin-bottom:24px; }
-  .ios-step { display:flex; gap:14px; align-items:flex-start; }
-  .ios-step .step-num {
-    width:30px; height:30px; border-radius:50%; flex-shrink:0;
-    background:linear-gradient(135deg,var(--accent2),var(--accent3));
-    display:flex; align-items:center; justify-content:center;
-    font-weight:700; font-size:.85rem;
-  }
-  .ios-step .step-txt { font-size:.84rem; color:var(--text-dim); padding-top:5px; line-height:1.5; }
-  .ios-step .step-txt strong { color:var(--text); }
-  .btn-close-ios {
-    background:var(--card-hi); border:1px solid var(--border); color:var(--text-dim);
-    border-radius:10px; padding:9px 28px; font-size:.82rem; cursor:pointer;
-    font-family:'DM Sans',sans-serif; transition:border-color .2s;
-  }
-  .btn-close-ios:hover { border-color:var(--accent2); color:var(--text); }
-
   /* ─── NAV ─── */
   nav {
     position:fixed; top:0; width:100%; z-index:100;
@@ -115,9 +49,7 @@
     border-bottom:1px solid var(--border);
     padding:14px 28px;
     display:flex; align-items:center; justify-content:space-between;
-    transition:top .3s ease;
   }
-  nav.pushed { top:52px; }
   .nav-logo {
     font-family:'Playfair Display',serif;
     font-size:1.25rem; font-weight:900;
@@ -359,41 +291,8 @@
 <div class="blob blob-2"></div>
 <div class="blob blob-3"></div>
 
-<!-- ─── INSTALL BANNER (Android / Desktop) ─── -->
-<div id="install-banner">
-  <div class="banner-left">
-    <div class="banner-icon">📲</div>
-    <div class="banner-text"><strong>Add to home screen</strong><br/>Use this trip guide offline, anytime.</div>
-  </div>
-  <button class="btn-install" id="btn-install">Install</button>
-  <button class="btn-dismiss" id="btn-dismiss">✕</button>
-</div>
-
-<!-- ─── iOS INSTRUCTIONS OVERLAY ─── -->
-<div id="ios-overlay">
-  <div class="ios-card">
-    <h3>📲 Add to Home Screen</h3>
-    <p class="ios-sub">A few quick taps and you're set:</p>
-    <div class="ios-steps">
-      <div class="ios-step">
-        <div class="step-num">1</div>
-        <div class="step-txt">Tap the <strong>Share</strong> button (↑) at the bottom of your screen.</div>
-      </div>
-      <div class="ios-step">
-        <div class="step-num">2</div>
-        <div class="step-txt">Scroll down and tap <strong>"Add to Home Screen"</strong></div>
-      </div>
-      <div class="ios-step">
-        <div class="step-num">3</div>
-        <div class="step-txt">Tap <strong>"Add"</strong> in the top-right corner. Done! 🎉</div>
-      </div>
-    </div>
-    <button class="btn-close-ios" id="btn-close-ios">Got it</button>
-  </div>
-</div>
-
 <!-- ─── NAV ─── -->
-<nav id="main-nav">
+<nav>
   <div class="nav-logo">BCN 2026</div>
   <div class="nav-links">
     <a href="#itinerary">Itinerary</a>
@@ -784,63 +683,6 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
-<!-- ─── PWA INSTALL + SERVICE WORKER ─── -->
-<script>
-  // ── refs ──
-  const banner     = document.getElementById('install-banner');
-  const btnInstall = document.getElementById('btn-install');
-  const btnDismiss = document.getElementById('btn-dismiss');
-  const iosOverlay = document.getElementById('ios-overlay');
-  const btnIosClose= document.getElementById('btn-close-ios');
-  const mainNav    = document.getElementById('main-nav');
-
-  let deferredPrompt = null;
-
-  // ── helpers ──
-  const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isStandalone = () =>
-    window.matchMedia('(display-mode: standalone)').matches ||
-    navigator.standalone;
-
-  // ── Android / Chrome: native install prompt ──
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    banner.classList.add('show');
-    mainNav.classList.add('pushed');
-  });
-
-  btnInstall.addEventListener('click', async () => {
-    banner.classList.remove('show');
-    mainNav.classList.remove('pushed');
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    }
-  });
-
-  btnDismiss.addEventListener('click', () => {
-    banner.classList.remove('show');
-    mainNav.classList.remove('pushed');
-  });
-
-  // ── iOS: show manual instructions after 2 s ──
-  if (isIOS() && !isStandalone()) {
-    setTimeout(() => iosOverlay.classList.add('show'), 2000);
-  }
-
-  btnIosClose.addEventListener('click', () => {
-    iosOverlay.classList.remove('show');
-  });
-
-  // ── Register service worker ──
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(err =>
-      console.warn('SW registration failed:', err)
-    );
-  }
 </script>
 </body>
 </html>

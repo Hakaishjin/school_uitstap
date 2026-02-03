@@ -1,22 +1,688 @@
-<html>
-    <head>
-        <title>This is a webpage!</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <nav>
-            <ul>
-                <li><a href="test.html">klik hier</a></li>
-                <li><a href="https://www.youtube.com">klik hier</a></li>
-            </ul>
-        </nav>
-        <form>
-            <label for="search_balk">Search:</label>
-                <input type="text" id="search_balk" value="Search something"> <br>
-            <label for="radio_ig">Radio</label>
-                <input type ="radio" id="radio_ig" value="radio"> <br>
-            <label for="check1">Check this</label>
-                <input type ="checkbox" id="check1" value="Checkes"> <br>
-        </form>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Barcelona Trip 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  /* ─── VARIABLES ─── */
+  :root {
+    --bg:        #0e0a14;
+    --card:      #16111f;
+    --card-hi:   #1e1730;
+    --accent:    #c084fc;
+    --accent2:   #a855f7;
+    --accent3:   #7c3aed;
+    --glow:      rgba(168,85,247,.35);
+    --text:      #f0eaf5;
+    --text-dim:  #9e8fad;
+    --border:    rgba(168,85,247,.18);
+    --gold:      #f0c060;
+  }
+
+  /* ─── RESET ─── */
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family:'DM Sans',sans-serif;
+    background:#0e0a14;
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* ─── AMBIENT BG BLOBS ─── */
+  .blob {
+    position:fixed; border-radius:50%; filter:blur(120px);
+    opacity:.25; pointer-events:none; z-index:0;
+  }
+  .blob-1{ width:500px;height:500px;background:var(--accent3);top:-150px;left:-100px; }
+  .blob-2{ width:400px;height:400px;background:#6d28d9;bottom:-100px;right:-80px; }
+  .blob-3{ width:300px;height:300px;background:#a855f7;top:50%;left:50%;transform:translate(-50%,-50%); opacity:.12;}
+
+  /* ─── NAV ─── */
+  nav {
+    position:fixed; top:0; width:100%; z-index:100;
+    background:rgba(14,10,20,.75);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+    padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-logo {
+    font-family:'Playfair Display',serif;
+    font-size:1.25rem; font-weight:900;
+    background:linear-gradient(135deg,var(--accent),var(--accent3));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .nav-links { display:flex; gap:22px; }
+  .nav-links a {
+    color:var(--text-dim); text-decoration:none;
+    font-size:.82rem; font-weight:500; letter-spacing:.5px; text-transform:uppercase;
+    transition:color .25s;
+  }
+  .nav-links a:hover { color:var(--accent); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position:relative; z-index:1;
+    min-height:100vh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center; padding:40px 24px;
+  }
+  .hero-label {
+    display:inline-block;
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:6px 18px;
+    font-size:.78rem; font-weight:500;
+    color:var(--accent); letter-spacing:1.5px; text-transform:uppercase;
+    margin-bottom:28px;
+    background:rgba(168,85,247,.08);
+  }
+  .hero h1 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(3rem,8vw,6.5rem);
+    font-weight:900; line-height:1.05;
+    background:linear-gradient(135deg,#f0eaf5 30%,var(--accent) 60%,var(--accent3) 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:18px;
+  }
+  .hero p {
+    color:var(--text-dim); font-size:1.1rem; max-width:520px;
+    line-height:1.6; margin-bottom:38px;
+  }
+  .hero-dates {
+    display:flex; gap:32px; flex-wrap:wrap; justify-content:center;
+  }
+  .hero-date-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:18px 26px;
+    min-width:140px;
+  }
+  .hero-date-card .label { font-size:.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+  .hero-date-card .val { font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:700; color:var(--accent); }
+
+  /* scroll hint */
+  .scroll-hint {
+    position:absolute; bottom:30px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    color:var(--text-dim); font-size:.75rem; letter-spacing:1px; text-transform:uppercase;
+  }
+  .scroll-hint .arrow { width:18px;height:18px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent); transform:rotate(45deg); animation:bounce 1.6s infinite; }
+  @keyframes bounce { 0%,100%{transform:rotate(45deg) translate(0,0)} 50%{transform:rotate(45deg) translate(3px,3px)} }
+
+  /* ─── SECTION STYLES ─── */
+  section { position:relative; z-index:1; padding:100px 24px; max-width:1100px; margin:0 auto; }
+  .section-header { text-align:center; margin-bottom:56px; }
+  .section-header .tag {
+    display:inline-block; font-size:.72rem; color:var(--accent);
+    letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;
+  }
+  .section-header h2 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.9rem,4vw,2.8rem); font-weight:900;
+  }
+
+  /* ─── ITINERARY (7 DAYS) ─── */
+  .days-grid { display:grid; gap:24px; }
+  .day-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:20px; overflow:hidden;
+    transition:border-color .3s, box-shadow .3s;
+    cursor:pointer;
+  }
+  .day-card:hover { border-color:var(--accent2); box-shadow:0 0 30px var(--glow); }
+
+  .day-header {
+    display:flex; align-items:center; gap:20px;
+    padding:22px 26px;
+  }
+  .day-num {
+    width:56px; height:56px; border-radius:14px; flex-shrink:0;
+    background:linear-gradient(135deg,var(--accent3),var(--accent2));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900;
+  }
+  .day-info h3 { font-size:1.15rem; font-weight:600; margin-bottom:3px; }
+  .day-info .day-sub { font-size:.82rem; color:var(--text-dim); }
+  .day-expand-icon { margin-left:auto; color:var(--text-dim); font-size:1.2rem; transition:transform .3s; }
+  .day-card.open .day-expand-icon { transform:rotate(180deg); }
+
+  .day-body {
+    max-height:0; overflow:hidden; transition:max-height .45s ease;
+  }
+  .day-card.open .day-body { max-height:600px; }
+  .day-body-inner { padding:0 26px 24px 26px; border-top:1px solid var(--border); padding-top:20px; }
+
+  .timeline { position:relative; padding-left:24px; }
+  .timeline::before { content:''; position:absolute; left:7px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,var(--accent3),var(--accent2)); border-radius:2px; }
+  .tl-item { position:relative; margin-bottom:16px; }
+  .tl-item:last-child { margin-bottom:0; }
+  .tl-dot { position:absolute; left:-24px; top:5px; width:14px; height:14px; border-radius:50%; background:var(--accent2); border:3px solid var(--bg); box-shadow:0 0 8px var(--glow); }
+  .tl-time { font-size:.75rem; color:var(--accent); font-weight:600; margin-bottom:2px; }
+  .tl-desc { font-size:.88rem; color:var(--text-dim); line-height:1.5; }
+
+  /* ─── TRAINS ─── */
+  .trains-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:24px; }
+  .train-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:20px; padding:28px;
+    transition:border-color .3s, transform .2s;
+  }
+  .train-card:hover { border-color:var(--accent2); transform:translateY(-4px); }
+  .train-card .train-route {
+    display:flex; align-items:center; gap:12px; margin-bottom:18px;
+  }
+  .train-card .station {
+    background:var(--card-hi); border-radius:10px; padding:8px 14px;
+    font-weight:600; font-size:.9rem; text-align:center; flex:1;
+  }
+  .train-card .arrow-mid { color:var(--accent); font-size:1.3rem; }
+  .train-card table { width:100%; border-collapse:collapse; }
+  .train-card td { padding:7px 0; font-size:.84rem; color:var(--text-dim); border-bottom:1px solid var(--border); }
+  .train-card td:last-child { text-align:right; color:var(--text); font-weight:500; }
+  .train-card td:first-child { display:flex; align-items:center; gap:8px; }
+  .train-card .icon-sm { font-size:.95rem; }
+  .train-card .note { margin-top:14px; font-size:.78rem; color:var(--accent); background:rgba(168,85,247,.08); padding:8px 12px; border-radius:8px; }
+
+  /* ─── HOTEL ─── */
+  .hotel-section { display:grid; grid-template-columns:1.1fr 1fr; gap:36px; align-items:start; }
+  .hotel-main {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:20px; padding:32px; 
+  }
+  .hotel-main h3 { font-family:'Playfair Display',serif; font-size:1.6rem; margin-bottom:6px; }
+  .hotel-main .hotel-location { color:var(--text-dim); font-size:.85rem; margin-bottom:22px; display:flex; align-items:center; gap:6px; }
+  .hotel-features { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .hotel-feat {
+    background:var(--card-hi); border-radius:12px; padding:16px;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .hotel-feat .feat-icon { font-size:1.3rem; flex-shrink:0; }
+  .hotel-feat .feat-title { font-size:.82rem; font-weight:600; margin-bottom:2px; }
+  .hotel-feat .feat-desc { font-size:.76rem; color:var(--text-dim); }
+
+  .hotel-sidebar { display:flex; flex-direction:column; gap:20px; }
+  .info-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:18px; padding:24px;
+  }
+  .info-card h4 { font-size:.78rem; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px; }
+  .info-card .info-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:.84rem; }
+  .info-card .info-row:last-child { border-bottom:none; }
+  .info-card .info-row span:last-child { color:var(--text); font-weight:500; }
+  .info-card .info-row span:first-child { color:var(--text-dim); }
+
+  /* ─── ACTIVITIES ─── */
+  .activities-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; }
+  .act-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:18px; padding:24px;
+    transition:border-color .3s, transform .2s;
+    position:relative; overflow:hidden;
+  }
+  .act-card:hover { border-color:var(--accent2); transform:translateY(-3px); }
+  .act-card .act-emoji { font-size:2rem; margin-bottom:12px; display:block; }
+  .act-card h4 { font-size:.95rem; font-weight:600; margin-bottom:6px; }
+  .act-card p { font-size:.8rem; color:var(--text-dim); line-height:1.5; }
+  .act-card .act-day { position:absolute; top:16px; right:16px; font-size:.7rem; background:rgba(168,85,247,.15); color:var(--accent); padding:3px 10px; border-radius:20px; font-weight:600; }
+
+  /* ─── TIPS ─── */
+  .tips-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; }
+  .tip-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:18px; padding:22px;
+  }
+  .tip-card .tip-icon { font-size:1.6rem; margin-bottom:10px; display:block; }
+  .tip-card h4 { font-size:.88rem; font-weight:600; margin-bottom:5px; }
+  .tip-card p { font-size:.79rem; color:var(--text-dim); line-height:1.55; }
+
+  /* ─── PACKING ─── */
+  .packing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+  .pack-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:18px; padding:22px;
+  }
+  .pack-card h4 { font-size:.85rem; color:var(--accent); text-transform:uppercase; letter-spacing:.8px; margin-bottom:14px; }
+  .pack-item { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:.82rem; color:var(--text-dim); }
+  .pack-item:last-child { border-bottom:none; }
+  .pack-item input[type=checkbox] {
+    appearance:none; width:17px; height:17px; border-radius:5px;
+    border:2px solid var(--border); background:var(--card-hi);
+    cursor:pointer; flex-shrink:0; transition:background .2s, border-color .2s;
+  }
+  .pack-item input:checked { background:var(--accent2); border-color:var(--accent2); }
+  .pack-item input:checked + span { text-decoration:line-through; color:var(--text-dim); opacity:.55; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position:relative; z-index:1;
+    text-align:center; padding:60px 24px 40px;
+    color:var(--text-dim); font-size:.8rem;
+  }
+  footer .footer-logo {
+    font-family:'Playfair Display',serif;
+    font-size:1.5rem; font-weight:900; margin-bottom:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent3));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media(max-width:700px){
+    .hotel-section { grid-template-columns:1fr; }
+    .hotel-features { grid-template-columns:1fr; }
+    nav { padding:12px 18px; }
+    .nav-links { gap:12px; }
+    .nav-links a { font-size:.72rem; }
+  }
+
+  /* ─── FADE-IN ON SCROLL ─── */
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- Ambient blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-logo">BCN 2026</div>
+  <div class="nav-links">
+    <a href="#itinerary">Itinerary</a>
+    <a href="#trains">Trains</a>
+    <a href="#hotel">Hotel</a>
+    <a href="#activities">Activities</a>
+    <a href="#tips">Tips</a>
+    <a href="#packing">Packing</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-label">🇪🇸 School Trip</div>
+  <h1>Barcelona</h1>
+  <p>Your complete guide to an unforgettable week in one of Europe's most vibrant cities. Everything you need — in one place.</p>
+  <div class="hero-dates">
+    <div class="hero-date-card">
+      <div class="label">Depart</div>
+      <div class="val">TBD</div>
+    </div>
+    <div class="hero-date-card">
+      <div class="label">Duration</div>
+      <div class="val">7 Days</div>
+    </div>
+    <div class="hero-date-card">
+      <div class="label">Return</div>
+      <div class="val">TBD</div>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll<div class="arrow"></div></div>
+</section>
+
+<!-- ─── ITINERARY ─── -->
+<section id="itinerary">
+  <div class="section-header reveal">
+    <div class="tag">📅 Day by Day</div>
+    <h2>Your 7-Day Itinerary</h2>
+  </div>
+  <div class="days-grid" id="daysGrid"></div>
+</section>
+
+<!-- ─── TRAINS ─── -->
+<section id="trains">
+  <div class="section-header reveal">
+    <div class="tag">🚄 Getting Around</div>
+    <h2>Trains & Transport</h2>
+  </div>
+  <div class="trains-grid" id="trainsGrid"></div>
+</section>
+
+<!-- ─── HOTEL ─── -->
+<section id="hotel">
+  <div class="section-header reveal">
+    <div class="tag">🏨 Where We Stay</div>
+    <h2>Hotel</h2>
+  </div>
+  <div class="hotel-section reveal">
+    <div class="hotel-main">
+      <h3>Hotel Barceló Rambla Catalunya</h3>
+      <div class="hotel-location">📍 Rambla de Catalunya, Barcelona — Central & walkable</div>
+      <div class="hotel-features">
+        <div class="hotel-feat"><div class="feat-icon">🏊</div><div><div class="feat-title">Rooftop Pool</div><div class="feat-desc">Open during summer months</div></div></div>
+        <div class="hotel-feat"><div class="feat-icon">🍳</div><div><div class="feat-title">Breakfast Included</div><div class="feat-desc">Buffet every morning</div></div></div>
+        <div class="hotel-feat"><div class="feat-icon">📶</div><div><div class="feat-title">Free Wi-Fi</div><div class="feat-desc">High-speed throughout</div></div></div>
+        <div class="hotel-feat"><div class="feat-icon">🛎️</div><div><div class="feat-title">24h Reception</div><div class="feat-desc">Help whenever you need it</div></div></div>
+        <div class="hotel-feat"><div class="feat-icon">🚇</div><div><div class="feat-title">Metro Nearby</div><div class="feat-desc">2 min walk to Diagonal</div></div></div>
+        <div class="hotel-feat"><div class="feat-icon">🧳</div><div><div class="feat-title">Luggage Storage</div><div class="feat-desc">Available on check-in day</div></div></div>
+      </div>
+    </div>
+    <div class="hotel-sidebar">
+      <div class="info-card">
+        <h4>📋 Room Info</h4>
+        <div class="info-row"><span>Room Type</span><span>Shared (4 per room)</span></div>
+        <div class="info-row"><span>Nights</span><span>6</span></div>
+        <div class="info-row"><span>Check-in</span><span>15:00</span></div>
+        <div class="info-row"><span>Check-out</span><span>11:00</span></div>
+      </div>
+      <div class="info-card">
+        <h4>⚠️ Hotel Rules</h4>
+        <div class="info-row"><span>Curfew</span><span>22:30</span></div>
+        <div class="info-row"><span>Noise policy</span><span>After 23:00</span></div>
+        <div class="info-row"><span>Room checks</span><span>Every morning</span></div>
+        <div class="info-row"><span>ID required</span><span>Yes</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ACTIVITIES ─── -->
+<section id="activities">
+  <div class="section-header reveal">
+    <div class="tag">🎭 Things to Do</div>
+    <h2>Activities & Highlights</h2>
+  </div>
+  <div class="activities-grid" id="activitiesGrid"></div>
+</section>
+
+<!-- ─── TIPS ─── -->
+<section id="tips">
+  <div class="section-header reveal">
+    <div class="tag">💡 Be Prepared</div>
+    <h2>Useful Tips</h2>
+  </div>
+  <div class="tips-grid" id="tipsGrid"></div>
+</section>
+
+<!-- ─── PACKING LIST ─── -->
+<section id="packing">
+  <div class="section-header reveal">
+    <div class="tag">🧳 Pack Smart</div>
+    <h2>Packing Checklist</h2>
+  </div>
+  <div class="packing-grid" id="packingGrid"></div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-logo">BCN 2026</div>
+  <p>Have an amazing trip. ✌️</p>
+</footer>
+
+<!-- ─── DATA + JS ─── -->
+<script>
+// ─── ITINERARY DATA ───
+const days = [
+  {
+    title:"Arrival & Explore Las Ramblas",
+    sub:"Settle in, get your bearings",
+    items:[
+      {time:"14:00",desc:"Arrive in Barcelona & check into hotel"},
+      {time:"15:30",desc:"Drop off luggage, freshen up"},
+      {time:"17:00",desc:"Walk Las Ramblas — grab snacks & soak in the vibe"},
+      {time:"19:00",desc:"Free time to explore the Gothic Quarter nearby"},
+      {time:"20:30",desc:"Group dinner at a local restaurant"}
+    ]
+  },
+  {
+    title:"Sagrada Família & Park Güell",
+    sub:"Barcelona's two most iconic spots",
+    items:[
+      {time:"09:00",desc:"Breakfast at the hotel (included!)"},
+      {time:"10:00",desc:"Guided tour of Sagrada Família — absolutely stunning inside"},
+      {time:"13:00",desc:"Lunch break near the cathedral"},
+      {time:"15:00",desc:"Head up to Park Güell — mosaic terraces & city views"},
+      {time:"18:00",desc:"Free time: grab an ice cream, enjoy the sunset"},
+      {time:"20:00",desc:"Dinner together"}
+    ]
+  },
+  {
+    title:"Barcelona Beach & Barceloneta",
+    sub:"Sun, sand & seafood",
+    items:[
+      {time:"09:30",desc:"Breakfast, then head to Barceloneta beach"},
+      {time:"11:00",desc:"Beach morning — swim, relax, play"},
+      {time:"13:30",desc:"Seafood lunch at a beachside restaurant"},
+      {time:"15:30",desc:"Afternoon beach time or explore the seaside shops"},
+      {time:"18:30",desc:"Head back, freshen up"},
+      {time:"20:00",desc:"Free dinner — pick your own spot!"}
+    ]
+  },
+  {
+    title:"Picasso Museum & Gothic Quarter",
+    sub:"Art, history & narrow streets",
+    items:[
+      {time:"10:00",desc:"Visit the Picasso Museum — world-class collection"},
+      {time:"12:30",desc:"Wander the Gothic Quarter's winding alleys"},
+      {time:"13:30",desc:"Lunch at a café in the quarter"},
+      {time:"15:00",desc:"Free time to shop or explore on your own"},
+      {time:"18:00",desc:"Regroup at hotel"},
+      {time:"20:00",desc:"Group dinner at a tapas restaurant"}
+    ]
+  },
+  {
+    title:"Day Trip — Montserrat",
+    sub:"Mountains, monastery & cable car",
+    items:[
+      {time:"08:30",desc:"Early breakfast, then take the train to Montserrat"},
+      {time:"10:30",desc:"Arrive at the monastery — explore & enjoy the views"},
+      {time:"12:30",desc:"Lunch at the monastery restaurant"},
+      {time:"14:00",desc:"Cable car ride down — incredible panorama"},
+      {time:"16:00",desc:"Return to Barcelona, rest up at the hotel"},
+      {time:"20:00",desc:"Relaxed dinner"}
+    ]
+  },
+  {
+    title:"Casa Batlló & Eixample District",
+    sub:"Gaudí's masterpiece & city life",
+    items:[
+      {time:"10:00",desc:"Tour Casa Batlló — one of Gaudí's most creative works"},
+      {time:"13:00",desc:"Lunch in the Eixample neighbourhood"},
+      {time:"15:00",desc:"Free afternoon — shopping on Passeig de Gràcia or relax"},
+      {time:"18:00",desc:"Meet up at the hotel"},
+      {time:"20:00",desc:"Final group dinner — celebrate the trip! 🎉"}
+    ]
+  },
+  {
+    title:"Departure Day",
+    sub:"Last morning & head home",
+    items:[
+      {time:"08:30",desc:"Last breakfast at the hotel"},
+      {time:"10:00",desc:"Check out & pack up"},
+      {time:"11:00",desc:"Free time for any last-minute souvenirs"},
+      {time:"13:00",desc:"Head to the station / airport for departure"},
+      {time:"—",desc:"Safe travels home! 👋"}
+    ]
+  }
+];
+
+// ─── TRAINS DATA ───
+const trains = [
+  {
+    from:"Home City",to:"Barcelona",
+    rows:[
+      {icon:"📅",label:"Date",val:"TBD"},
+      {icon:"🕐",label:"Departure",val:"TBD"},
+      {icon:"🕐",label:"Arrival",val:"TBD"},
+      {icon:"🎟️",label:"Ticket",val:"Included in trip cost"}
+    ],
+    note:"🚄 Tickets will be organised by school. Check your email for confirmation."
+  },
+  {
+    from:"Barcelona",to:"Montserrat",
+    rows:[
+      {icon:"🚇",label:"Line",val:"FGC S1 line"},
+      {icon:"🕐",label:"Duration",val:"~55 min"},
+      {icon:"📍",label:"Depart from",val:"Plaça Catalunya station"},
+      {icon:"🎟️",label:"Ticket",val:"Buy at station (cash/card)"}
+    ],
+    note:"💡 The S1 line leaves every 30 min. Look for signs to Montserrat Aeri."
+  },
+  {
+    from:"Barcelona",to:"Home City",
+    rows:[
+      {icon:"📅",label:"Date",val:"TBD"},
+      {icon:"🕐",label:"Departure",val:"TBD"},
+      {icon:"🕐",label:"Arrival",val:"TBD"},
+      {icon:"🎟️",label:"Ticket",val:"Included in trip cost"}
+    ],
+    note:"📋 Meet the group 1 hour before departure at the station."
+  },
+  {
+    from:"Hotel",to:"Around Barcelona",
+    rows:[
+      {icon:"🚇",label:"Main line",val:"Metro L5 (Diagonal)"},
+      {icon:"📱",label:"App",val:"T-Casual card (10 rides)"},
+      {icon:"🕐",label:"Frequency",val:"Every 3–5 min"},
+      {icon:"💰",label:"Cost",val:"~€1.50 per ride"}
+    ],
+    note:"🎫 Buy a T-Casual 10-ride card at any station — saves money!"
+  }
+];
+
+// ─── ACTIVITIES DATA ───
+const activities = [
+  {emoji:"⛪",title:"Sagrada Família",desc:"Gaudí's legendary unfinished cathedral. The inside is breathtaking.",day:"Day 2"},
+  {emoji:"🌳",title:"Park Güell",desc:"Mosaic gardens & the best panoramic views of the city.",day:"Day 2"},
+  {emoji:"🏖️",title:"Barceloneta Beach",desc:"Barcelona's famous beach — perfect for a sunny afternoon.",day:"Day 3"},
+  {emoji:"🎨",title:"Picasso Museum",desc:"Hundreds of works by Picasso in a stunning medieval building.",day:"Day 4"},
+  {emoji:"⛰️",title:"Montserrat",desc:"A stunning mountain monastery with cable car views.",day:"Day 5"},
+  {emoji:"🏠",title:"Casa Batlló",desc:"One of Gaudí's wildest and most creative buildings.",day:"Day 6"},
+  {emoji:"🛍️",title:"Las Ramblas & Gothic Quarter",desc:"Iconic street for strolling, shopping and people-watching.",day:"Day 1"},
+  {emoji:"🍤",title:"Tapas & Seafood",desc:"Try paella, croquetas, and fresh seafood at local spots.",day:"Every day"}
+];
+
+// ─── TIPS DATA ───
+const tips = [
+  {icon:"💰",title:"Money & Cards",desc:"Most places accept cards, but carry some cash for markets and small shops. Notify your bank before you travel!"},
+  {icon:"🚇",title:"Metro is King",desc:"Barcelona's metro is fast, cheap and easy. Download the metro map on your phone. Use the T-Casual card to save."},
+  {icon:"☀️",title:"Sun & Heat",desc:"Wear sunscreen, a hat, and bring a water bottle. Refill it at any café for free (just ask politely!)."},
+  {icon:"📱",title:"Stay Connected",desc:"Hotel Wi-Fi is free. Download offline maps (Google Maps) in case you wander where signal is weak."},
+  {icon:"🗣️",title:"Basic Spanish",desc:"'Hola' (hello), 'Gracias' (thanks), '¿Cuánto vale?' (how much?) — locals appreciate the effort!"},
+  {icon:"🔒",title:"Stay Safe",desc:"Walk in groups at all times. Keep valuables in front pockets. Know the hotel address by heart."},
+  {icon:"⏰",title:"Respect Curfew",desc:"Be back at the hotel by 22:30. Teachers will be checking. No exceptions!"},
+  {icon:"🏥",title:"Health & Emergencies",desc:"Carry your EHIC card. Know where the nearest hospital is. Tell a teacher if you feel unwell."}
+];
+
+// ─── PACKING DATA ───
+const packingCategories = [
+  {
+    title:"👕 Clothing",
+    items:["Light t-shirts (×5)","Shorts or summer trousers","Comfortable walking shoes","Sandals / flip-flops","Light jacket or hoodie","Swimwear","Underwear & socks (×7)","Pyjamas"]
+  },
+  {
+    title:"🧴 Toiletries",
+    items:["Toothbrush & toothpaste","Deodorant","Sunscreen (SPF 30+)","Shampoo & body wash","Hair brush / comb","Moisturiser","Hand sanitiser","Tissues / lip balm"]
+  },
+  {
+    title:"📦 Essentials",
+    items:["Passport / ID","EHIC card","Travel insurance docs","Phone charger","Portable power bank","Reusable water bottle","Small backpack / day bag","Cash (euros)"]
+  },
+  {
+    title:"🎒 Extras",
+    items:["Sunglasses","Hat / cap","Zip-lock bags","Snacks for travel","Book or cards for downtime","Camera (optional)","Small towel","Earplugs"]
+  }
+];
+
+// ─── RENDERERS ───
+
+// Days
+const daysGrid = document.getElementById('daysGrid');
+days.forEach((day, i) => {
+  const card = document.createElement('div');
+  card.className = 'day-card reveal';
+  card.innerHTML = `
+    <div class="day-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="day-num">${i+1}</div>
+      <div class="day-info">
+        <h3>${day.title}</h3>
+        <div class="day-sub">${day.sub}</div>
+      </div>
+      <div class="day-expand-icon">▼</div>
+    </div>
+    <div class="day-body">
+      <div class="day-body-inner">
+        <div class="timeline">
+          ${day.items.map(it => `
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-time">${it.time}</div>
+              <div class="tl-desc">${it.desc}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+  daysGrid.appendChild(card);
+});
+
+// Trains
+const trainsGrid = document.getElementById('trainsGrid');
+trains.forEach(t => {
+  const card = document.createElement('div');
+  card.className = 'train-card reveal';
+  card.innerHTML = `
+    <div class="train-route">
+      <div class="station">${t.from}</div>
+      <div class="arrow-mid">→</div>
+      <div class="station">${t.to}</div>
+    </div>
+    <table>
+      ${t.rows.map(r => `<tr><td><span class="icon-sm">${r.icon}</span> ${r.label}</td><td>${r.val}</td></tr>`).join('')}
+    </table>
+    <div class="note">${t.note}</div>`;
+  trainsGrid.appendChild(card);
+});
+
+// Activities
+const activitiesGrid = document.getElementById('activitiesGrid');
+activities.forEach(a => {
+  const card = document.createElement('div');
+  card.className = 'act-card reveal';
+  card.innerHTML = `
+    <span class="act-day">${a.day}</span>
+    <span class="act-emoji">${a.emoji}</span>
+    <h4>${a.title}</h4>
+    <p>${a.desc}</p>`;
+  activitiesGrid.appendChild(card);
+});
+
+// Tips
+const tipsGrid = document.getElementById('tipsGrid');
+tips.forEach(t => {
+  const card = document.createElement('div');
+  card.className = 'tip-card reveal';
+  card.innerHTML = `<span class="tip-icon">${t.icon}</span><h4>${t.title}</h4><p>${t.desc}</p>`;
+  tipsGrid.appendChild(card);
+});
+
+// Packing
+const packingGrid = document.getElementById('packingGrid');
+packingCategories.forEach(cat => {
+  const card = document.createElement('div');
+  card.className = 'pack-card reveal';
+  card.innerHTML = `
+    <h4>${cat.title}</h4>
+    ${cat.items.map(item => `
+      <div class="pack-item">
+        <input type="checkbox" />
+        <span>${item}</span>
+      </div>
+    `).join('')}`;
+  packingGrid.appendChild(card);
+});
+
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
 </html>
